@@ -1,3 +1,5 @@
+package com.lhg;
+
 import com.lhg.service.FrameService;
 
 import javax.swing.*;

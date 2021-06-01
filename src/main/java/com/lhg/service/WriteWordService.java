@@ -66,9 +66,9 @@ public class WriteWordService {
         }
     }
 
-    public void writeWord(XWPFDocument xwpfDocument, String path) throws IOException {
+    public static void writeWord(XWPFDocument xwpfDocument, String path) throws IOException {
         String fileName = "word.doc";
-        String filePath = path + "/" + fileName;
+        String filePath = path + "\\" + fileName;
         File file = new File(filePath);
         if (!file.exists()) {
             boolean newFile = file.createNewFile();
@@ -76,13 +76,13 @@ public class WriteWordService {
                 return;
             }
         }
-        OutputStream out = new FileOutputStream(path);
+        OutputStream out = new FileOutputStream(file);
         xwpfDocument.write(out);
     }
 
     public void writeWord(HWPFDocument hwpfDocument, String path) throws IOException {
         String fileName = "word.doc";
-        String filePath = path + "/" + fileName;
+        String filePath = path + "\\" + fileName;
         File file = new File(filePath);
         if (!file.exists()) {
             boolean newFile = file.createNewFile();
@@ -90,7 +90,7 @@ public class WriteWordService {
                 return;
             }
         }
-        OutputStream out = new FileOutputStream(path);
+        OutputStream out = new FileOutputStream(file);
         hwpfDocument.write(out);
     }
 }
