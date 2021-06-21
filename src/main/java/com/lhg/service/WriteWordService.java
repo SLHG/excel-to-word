@@ -66,7 +66,7 @@ public class WriteWordService {
         }
     }
 
-    public static void writeWord(XWPFDocument xwpfDocument, String path) throws IOException {
+    public void writeWord(XWPFDocument xwpfDocument, String path) throws IOException {
         String fileName = "word.doc";
         String filePath = path + "\\" + fileName;
         File file = new File(filePath);
