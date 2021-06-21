@@ -70,22 +70,15 @@ public class BeginTransformButtonActionLister implements ActionListener {
         Object result = templateResult.getResult();
         if (result instanceof HWPFDocument) {
             writeWordService.replaceSymbolByInfo((HWPFDocument) result, map);
-            try {
-                writeWordService.writeWord((HWPFDocument) result, writeFilePathJLabel.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                printInfo("错误:" + ex.getMessage(), true);
-                return;
-            }
         } else {
             writeWordService.replaceSymbolByInfo((XWPFDocument) result, map);
-            try {
-                writeWordService.writeWord((XWPFDocument) result, writeFilePathJLabel.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                printInfo("错误:" + ex.getMessage(), true);
-                return;
-            }
+        }
+        try {
+            writeWordService.writeWord(result, writeFilePathJLabel.getText());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            printInfo("错误:" + ex.getMessage(), true);
+            return;
         }
         printInfo("完成", true);
     }
