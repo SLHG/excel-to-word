@@ -14,17 +14,29 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DocFileParsing {
 
     //文件目录
-    private static final String DOC_PATH = "C:/新建文件夹/21年所有报名表/";
+    private static final String DOC_PATH = "C:/新建文件夹/21年所有报名表/21年所有报名表/";
     //导出目录
-    private static final String WRITE_PATH = "C:/新建文件夹/表格.xlsx";
+    private static final String WRITE_PATH = "C:/新建文件夹/表格1.xlsx";
+
+    private static final List<String> TITLES = new ArrayList<String>() {{
+        add("姓名");
+        add("姓名全拼");
+        add("证件类型");
+        add("证件号码");
+        add("出生日期");
+        add("性别");
+        add("报考级别");
+        add("民族");
+        add("国籍");
+        add("电话号码");
+        add("住址");
+        add("邮编");
+    }};
 
     public static void main(String[] args) throws IOException {
         File file = new File(DOC_PATH);
@@ -36,18 +48,9 @@ public class DocFileParsing {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         Row row = sheet.createRow(0);
-        row.createCell(0).setCellValue("姓名");
-        row.createCell(1).setCellValue("姓名全拼");
-        row.createCell(2).setCellValue("证件类型");
-        row.createCell(3).setCellValue("证件号码");
-        row.createCell(4).setCellValue("出生日期");
-        row.createCell(5).setCellValue("性别");
-        row.createCell(6).setCellValue("报考级别");
-        row.createCell(7).setCellValue("民族");
-        row.createCell(8).setCellValue("国籍");
-        row.createCell(9).setCellValue("电话号码");
-        row.createCell(10).setCellValue("住址");
-        row.createCell(11).setCellValue("邮编");
+        for (int i = 0; i < TITLES.size(); i++) {
+            row.createCell(i).setCellValue(TITLES.get(i));
+        }
         processFiles(files, sheet);
         OutputStream os = new FileOutputStream(WRITE_PATH);
         workbook.write(os);
@@ -98,6 +101,7 @@ public class DocFileParsing {
         }
         if (j == 2 && k == 1) {
             String trim = text.replaceAll("报考级别", "").replaceAll("级", "").replaceAll("：", "").replaceAll("报考", "").replaceAll("級", "").trim();
+            System.out.println(trim);
             sheetRow.createCell(6).setCellValue(HASH_MAP.getOrDefault(trim, trim));
         }
         if (j == 3 && k == 0) {
@@ -111,7 +115,7 @@ public class DocFileParsing {
     }
 
     private static String formatDate(String date) {
-        return date.replaceAll("出生年月日", "")
+        String formatDate = date.replaceAll("出生年月日", "")
                 .replaceAll("：", "")
                 .replaceAll("出生", "")
                 .replaceAll(":", "")
@@ -127,6 +131,25 @@ public class DocFileParsing {
                 .replaceAll("\\s*", "")
                 .replaceAll(" ", "")
                 .replaceAll("\\u00A0", "");
+        if (formatDate.contains("-")) {
+            String[] split = formatDate.split("-");
+            StringBuilder sb = new StringBuilder();
+            sb.append(split[0]).append("-");
+            if (split[1].length() == 1) {
+                sb.append("0");
+            }
+            sb.append(split[1]).append("-");
+            if (split[2].length() == 1) {
+                sb.append("0");
+            }
+            sb.append(split[2]);
+            return sb.toString();
+        }
+        if (formatDate.length() == 8) {
+            char[] chars = formatDate.toCharArray();
+            return String.valueOf(chars[0]) + chars[1] + chars[2] + chars[3] + "-" + chars[4] + chars[5] + "-" + chars[6] + chars[7];
+        }
+        return formatDate;
     }
 
     private static final Map<String, String> HASH_MAP = new HashMap<String, String>() {
